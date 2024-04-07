@@ -10,10 +10,12 @@
 
 1.链表节点头插入、节点插入、节点删除
 先定义一个节点类class Node，含有两个参数，data存储节点值，next存储节点下一个指向的目标。
+'''
 class Node:
     def __init__(self, data):
         self.data = data
         self.next = None
+'''
 再定义一个链表类linkListNode，先将头节点设置为None，即链表初始化为空链表。
 class linkListNode:
     def __init__(self):

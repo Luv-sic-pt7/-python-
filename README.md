@@ -17,16 +17,20 @@ class Node:
         self.next = None
 ```
 再定义一个链表类linkListNode，先将头节点设置为None，即链表初始化为空链表。
+```
 class linkListNode:
     def __init__(self):
         self.head = None
-
+```
 然后定义headInsert头插函数，将节点插入，将head节点指向该新插入的节点，时间复杂度为O(1)
+```
 def headInsert(self, data):
     new = Node(data)
     new.next = self.head
     self.head = new
+```
 定义tailInsert尾插函数，将节点插入到最后一个节点的后面，由于链表只能顺序访问，时间复杂度为O(n)
+```
 def tailInsert(self, data):
     new = Node(data)
     if self.head is None:
@@ -36,7 +40,9 @@ def tailInsert(self, data):
         while idx.next:
             idx = idx.next
         idx.next = new
+```
 再定义普通的insert插入函数，将节点插入到第k个节点后，平均时间复杂度也为O(n)
+```
 def insert(self, data, k):
     new = Node(data)
     idx = self.head
@@ -46,7 +52,9 @@ def insert(self, data, k):
     if idx:
         new.next = idx.next
         idx.next = new
+```
 要删除链表中第k个节点，定义remove函数，传入参数k
+```
 def remove(self, k):
     if k == 1:
         if self.head:
@@ -58,7 +66,9 @@ def remove(self, k):
             idx = idx.next
         if idx and idx.next:
             idx.next = idx.next.next
+```
 下面是测试代码，测试了插入、删除、查找功能：
+```
 ## 导入linearTable.py中的linkListNode和to_list函数
 from linearTable import linkListNode, to_list
 
@@ -87,7 +97,8 @@ while idx:
     if idx.data == 5:
         print("找到元素5")
     idx = idx.next
-输出结果如下：
+```
+
 
 2.链表反转功能的实现
 定义reverse函数，采用迭代的方式来反转链表,而不是递归的方式。具体实现过程如下：
@@ -99,6 +110,7 @@ while idx:
 ·将 p 指向当前节点 q。这一步是为了在下一次循环时,p 指向正确的反转链表的最后一个节点。
 ·循环结束后,self.head 指向了原链表的最后一个节点,而 p 指向了反转后链表的第一个节点。
 ·将 self.head 指向 p,即反转后链表的第一个节点。
+```
 def reverse(self):
     p = None
     while self.head:
@@ -107,7 +119,9 @@ def reverse(self):
         q.next = p
         p = q
     self.head = p
+```
 测试代码如下，将链表设为2->4->9->6->10->7：
+```
 from linearTable import *
 list = linkListNode()
 list.from_list([2, 4, 9, 6, 10, 7])
@@ -116,11 +130,12 @@ idx = list.head
 while idx:
     print(idx.data, end=' ')
     idx = idx.next
-输出结果如下：
+```
 
 3.链表排序功能的实现
 定义函数sort，用冒泡排序的方式实现链表排序。
 通过两层嵌套循环执行冒泡排序的逻辑。外层循环控制需要排序的趟数,内层循环控制每一趟比较和交换的过程。在内层循环中,使用了三个指针 curr、prev 和 next_node。curr 指向当前待比较的节点,prev 指向其前一个节点,next_node 指向后一个节点。
+```
 def sort(self):
     if not self.head or not self.head.next:
         return self.head
@@ -151,7 +166,9 @@ def sort(self):
             curr = next_node
 
     return self.head
+```
 测试代码如下:
+```
 from linearTable import *
 # 创建一个无序链表
 unsorted_list = linkListNode()
@@ -163,19 +180,22 @@ unsorted_list.sort()
 # 将排序后的链表转换为列表
 sorted_list = to_list(unsorted_list)
 print(sorted_list)  # 输出: [1, 3, 5, 7, 9]
-输出结果如下：
+```
 
 
 4.顺序表和链表的相互构造
 在链表类中定义将顺序表转换到链表的方法from_list，传入顺序表ls作为参数，按序遍历并逐个头插，最后将链表反转。 
 如果采用尾插法，每次插入都需要O(n),总复杂度为O(n^2)。
 如果采用头插法，每次插入需要O(1)时间，反向便利链表需要O(n)时间。这里采用头插法，虽然没有尾插方便，但是相对效率更高。
+```
 def from_list(self, ls):
     self.head = None
     for x in ls:
         self.headInsert(x)
     self.reverse()
+```
 在整个linearTable文件中定义函数to_list，将链表存入到顺序表中，逐个顺序遍历链表存入：
+```
 def to_list(linkLs):
     ls = []
     idx = linkLs.head
@@ -183,13 +203,15 @@ def to_list(linkLs):
         ls.append(idx.data)
         idx = idx.next
     return ls
+```
 测试代码如下：
+```
 from linearTable import *
 ll = linkListNode()
 ls0 = list(map(int, input().split()))
 ll.from_list(ls0)
 print(to_list(ll))
-输出结果如下：
+```
 
 5.反向遍历操作链表
 定义方法rev_visit，传入参数op，其中op为自定义的函数方法，且该方法不会改变链表本身的顺序结构。
@@ -197,7 +219,7 @@ print(to_list(ll))
 通过一个 while 循环,将原链表进行反转。反转的过程就是将每个节点的 next 指针指向前一个节点。反转后,pre 指向了原链表的最后一个节点。
 将反转后的链表头节点赋值给 self.head,然后定义 idx = pre,从尾部开始遍历反转后的链表。在遍历过程中,对每个节点执行自定义操作 op(idx)。
 遍历结束后,原链表的 next 指针结构已经被破坏。因此需要将链表再次反转,以恢复原始结构。反转的过程与第 2 步相同,只是这次 pre 最终指向了原链表的头节点。将反转后的链表头节点赋值回 self.head,即完成了原链表结构的恢复。
-
+```
 def rev_visit(self, op):
     pre = None
     idx = self.head
@@ -224,7 +246,9 @@ def rev_visit(self, op):
         idx = ne
     ## 将head变回原来的head
     self.head = pre
+```
 测试的代码如下，定义函数op，将节点存储的数据加一：
+```
 from linearTable import *
 def op(idx):
     idx.data += 1
@@ -234,9 +258,8 @@ list.from_list([2, 5, 7, 1, 3, 7])
 ## 检测操作结果
 list.rev_visit(op)
 print()
-输出结果如下：
-
-第一行代表每次处理后的data结果，证明了链表确实是在进行反向遍历。第二行按顺序重新输出链表，验证了链表的结构已经还原。
+```
+输出第一行代表每次处理后的data结果，证明了链表确实是在进行反向遍历。第二行按顺序重新输出链表，验证了链表的结构已经还原。
 6.两链表元素交替插入
 定义函数interLeaving，将链表another交叉合并如self链表中。	定义两个指针 idx1 和 idx2 分别指向两个原始链表的头节点。定义一个布尔变量 flag,用于控制下一个插入节点应该来自哪个链表。初始化为 True,表示先从第一个链表插入。
 使用 while 循环遍历两个链表,循环条件是 idx1 和 idx2 均不为空。在循环体内部,先临时保存 idx1 和 idx2 的下一个节点,分别为 ne1 和 ne2。根据 flag 的值,决定从哪个链表插入节点:
@@ -245,6 +268,7 @@ print()
 每次插入操作后,将 flag 取反,即 flag = not flag。这样可以在两个链表之间交替插入节点。
 循环结束后,有两种情况:
 如果一个链表较长,那么该链表的剩余节点将直接插入到新链表的尾部。如果另一个链表较长,由于交替插入的特性,新链表的尾节点已经指向了该链表中的下一个节点,因此无需额外操作。
+```
 def interLeaving(self, another):
     idx1 = self.head
     idx2 = another.head
@@ -263,7 +287,9 @@ def interLeaving(self, another):
     ## 原链表较长的情况，此时idx2指向空，不需要对list1进行改变
     ## 插入链表较长的情况，此时idx1指向空，而原链表的tail元素已经指向了another中对应的下一个元素
     ## 继续执行to_list操作，仍然会在another表中继续遍历至空
+```
 测试代码如下：
+```
 from linearTable import *
 list1 = linkListNode()
 list1.from_list([1, 3, 5])
@@ -274,7 +300,8 @@ list2.from_list([2, 4, 6, 7, 8, 9])
 list1.interLeaving(list2)
 merged_list = to_list(list1)
 print(merged_list)  # 输出: [1, 2, 3, 4, 5, 6, 7, 8, 9]
-将list2插入到list1中，其中list2更长，输出结果如下：
+```
+将list2插入到list1中，其中list2更长
 
 
 
@@ -283,6 +310,7 @@ print(merged_list)  # 输出: [1, 2, 3, 4, 5, 6, 7, 8, 9]
 创建两个新的链表头节点 true_head 和 false_head，分别用于存放满足谓词条件和不满足条件的节点。同时定义两个指针 idx1 和 idx2 分别指向两个链表的尾部。
 定义指针 idx 指向原始链表的头节点,开始遍历。在遍历过程中,先保存当前节点的下一个节点为 ne。遍历结束后,将真链表和假链表的尾节点的 next 指针指向 None。
 创建两个新的链表对象 true_list 和 false_list,分别将它们的头节点指向真链表和假链表的头节点。
+```
 def partition(self, pred):
     true_head = Node(None)  # 创建真链表的头节点
     idx1 = true_head
@@ -309,7 +337,9 @@ def partition(self, pred):
     false_list.head = false_head.next  # 假链表的头节点
 
     return true_list, false_list
+```
 测试代码中，定义is_odd函数判断是否为偶数：
+```
 from linearTable import *
 list = linkListNode()
 list.from_list([1, 4, 2, 7, 3, 6, 5])
@@ -326,13 +356,16 @@ for item in to_list(true_list):
 print("\nFalse List:")
 for item in to_list(false_list):
     print(item, end=" ")  # 输出: 4 2 6
-输出结果如下：
+```
+
 
 8.排序单链表类的定义
 定义一个排序单链表类：
+```
 class sortedLinkListNode:
     def __init__(self):
         self.head = None
+```
 类似之前的链表类，该排序单链表类继承了其中的headInsert方法、reverse方法、from_list方法便于自定义链表。
 为实现链表的有序合并，定义merge函数。
 首先创建了一个哑节点(dummy node) dummy,用于辅助合并操作。哑节点的作用是避免在合并过程中需要特殊处理头节点的情况。通过使用哑节点,可以更加简洁地实现链表的合并。
@@ -342,7 +375,7 @@ class sortedLinkListNode:
 循环结束后,可能还有一个链表中剩余未合并的节点。此时,将剩余的部分直接并入新链表的尾部,即:
 如果 p1 不为空,则将 p1 剩余的部分并入新链表,即 curr.next = p1。如果 p2 不为空,则将 p2 剩余的部分并入新链表,即 curr.next = p2。
 最后,创建一个新的有序链表对象 merged_list,将合并后的链表头节点赋值给它的 head 属性。返回新的有序链表对象 merged_list。
-
+```
 def merge(self, another):
     dummy = Node(0)  # 创建一个哑节点
     curr = dummy
@@ -368,7 +401,9 @@ def merge(self, another):
     merged_list = sortedLinkListNode()
     merged_list.head = dummy.next
     return merged_list
+```
 测试代码如下：
+```
 from linearTable import *
 list1 = sortedLinkListNode()
 list1.from_list([1, 3, 5])
@@ -382,24 +417,29 @@ curr = merged_list.head
 while curr:
     print(curr.data, end=' ')  # 输出: 1 2 3 4 5 6 9
     curr = curr.next
+```
 
-输出结果如下：
 
 9.表指针单链表类的定义
 重新定义表指针节点ValueIndexNode类：
+```
 class ValueIndexNode:
     def __init__(self, data):
         self.data = data
         self.index = None
         self.next = None
+```
 
 该类具有三个参数，index表示该节点所在的表的下标。
 定义表指针单链表类ValueIndexList类：
+```
 def __init__(self, index):
     self.head = None
     self.index = index
+```
 初始化的时候需要传入表的index参数，即表下标。
 以下为该类的各个方法：
+```
 def headInsert(self, data):
     new = ValueIndexNode(data)
     if self.head is None:
@@ -465,10 +505,12 @@ def print_list(self):
         print(curr.data, end=" ")
         curr = curr.next
     print()
+```
 相比之前的单链表类，在插入操作时，都需要加入语句new.index = self.index，初始化节点时节点的index为None，需要在插入时将节点的index赋值为单链表的index值。
 在删除节点的时候，也需要将节点的index值重置为None。
 新增了一个change函数，将链表中的第k个节点转移头插入新链表中，需要先进行remove操作，然后将节点头插入新链表并将节点的index值赋为新链表的index。
 测试代码如下：
+```
 from linearTable import *
 list1 = ValueIndexList(1)
 list1.from_list([1, 2, 3, 4, 5])
@@ -479,4 +521,5 @@ list1.print_list()
 list1.change(4, list2)
 list1.print_list()
 list2.print_list()
-输出结果如下：
+```
+
